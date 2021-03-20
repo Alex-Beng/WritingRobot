@@ -2,6 +2,7 @@ import socket
 import json
 import threading
 from util import readjson
+from skeleton import uni2pnts, pnts2skeleton
 
 
 def stroke_server(sock: socket.socket, font: dict):
@@ -10,16 +11,19 @@ def stroke_server(sock: socket.socket, font: dict):
         return
 
     req = str(data, encoding='utf-8')
-
+    res = ''
     for word in req:
         uni = str(ord(word))
-        if uni in font['cmap']:
-            word_name = font['cmap'][uni]
-            
-            print(word_name, uni)
-        else:
-            print(ord(word))
-        pass
+        stroke_pnts, rect_size = uni2pnts(uni, font)
+        if stroke_pnts is None:
+            continue
+        for stroke_pnt in stroke_pnts:
+            stroke = pnts2skeleton(stroke_pnt, rect_size, True)
+
+            t_res = str(stroke)
+            res += t_res
+    print(res)
+    sock.send(bytes(res, encoding='utf-8'))
     sock.close()
     return
 
@@ -44,5 +48,5 @@ if __name__ == "__main__":
     
     # exit()
     main(
-        "../../config/font/arial.json",
+        "../../config/font/fangsong_gb2312.json",
         "../../config/stroke_serv.json")

@@ -3,6 +3,40 @@ import numpy as np
 from skimage.morphology import skeletonize
 
 
+# unicode to path points
+# input: sigle unicode 
+# output: poly points(rebase if needed), and the glyf-rect
+# reture None if not have
+def uni2pnts(uni :str, font :dict):
+    if not uni in font['cmap']:
+        return None, None
+    if not font['cmap'][uni] in font['glyf'] or \
+        not 'contours' in font['glyf'][font['cmap'][uni]]:
+        return None, None
+    glyf_key = font['cmap'][uni]
+    print(glyf_key)
+
+    x_min = font['head']['xMin']
+    y_min = font['head']['yMin']
+    x_max = font['head']['xMax']
+    y_max = font['head']['yMax']
+
+    contours = font['glyf'][glyf_key]['contours']
+    all_stroke_pnts = []
+    for contour in contours:
+        res_pnts = []
+        for pnt_dict in contour:
+            t_x = pnt_dict['x']
+            t_y = pnt_dict['y']
+            if x_min < 0:
+                t_x -= x_min
+            if y_min < 0:
+                t_y -= y_min
+            res_pnts.append([t_x, t_y])
+        all_stroke_pnts.append(res_pnts)
+    return all_stroke_pnts, (y_max-y_min, x_max-x_min)
+
+     
 # poly points(contours) to its skeleton
 # coor keep the same
 # assume the pnt have become 0-base
@@ -13,19 +47,14 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
 
     cv2.fillPoly(img, [ploy_pnts], (1))
     skeleton = skeletonize(img, method='lee')
-    skeleton = skeleton.astype(np.uint8)*255
-    _, contours, _, = cv2.findContours(skeleton, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    skeleton = skeleton.astype(np.uint8)
+    return np.nonzero(skeleton)
     
-    contour = contours[0]
-    pnt_num = contour.shape[0]
-    pnt_num = int(pnt_num)
-    half_pnt_num = pnt_num//2
+# use tsp alg to plan path based on skeleton
+# coor keep the same
+def tsp_pnts(ske_pnts):
+    
+    return
 
-    half_contour = contour[:half_pnt_num, :, :]
-    half_contour = half_contour.reshape(-1, 2)    
-    if debug:
-        result_img = np.zeros(size, np.uint8)        
-        for pnt in half_contour:
-            result_img[pnt[1], pnt[0]] = 255
-        cv2.imshow("res", result_img)
-        cv2.waitKey()
+if __name__ == "__main__":
+    pass
