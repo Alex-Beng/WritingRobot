@@ -14,7 +14,6 @@ def uni2pnts(uni :str, font :dict):
         not 'contours' in font['glyf'][font['cmap'][uni]]:
         return None, None
     glyf_key = font['cmap'][uni]
-    print(glyf_key)
 
     x_min = font['head']['xMin']
     y_min = font['head']['yMin']
@@ -48,13 +47,29 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
     cv2.fillPoly(img, [ploy_pnts], (1))
     skeleton = skeletonize(img, method='lee')
     skeleton = skeleton.astype(np.uint8)
-    return np.nonzero(skeleton)
+    return [list(i) for i in np.nonzero(skeleton)]
     
 # use tsp alg to plan path based on skeleton
 # coor keep the same
 def tsp_pnts(ske_pnts):
     
     return
+
+def viz_pnts(size, pnts, path=None):
+    img = np.zeros(size, np.uint8)
+
+    if path is None:
+        for i in range(len(pnts[0])):
+            img[pnts[1][i], pnts[0][i]] = 255
+    else:
+        for i in path:
+            img[pnts[1][i], pnts[0][i]] = 255
+            cv2.imshow("ya", img)
+            cv2.waitKey(20)
+    img = cv2.transpose(img)
+    img = cv2.flip(img, 0)
+    cv2.imshow("ya", img)
+    cv2.waitKey(500)
 
 if __name__ == "__main__":
     pass

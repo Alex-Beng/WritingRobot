@@ -2,30 +2,38 @@ import socket
 import json
 import threading
 from util import readjson
-from skeleton import uni2pnts, pnts2skeleton
+from skeleton import uni2pnts, pnts2skeleton, viz_pnts
 
 
 def stroke_server(sock: socket.socket, font: dict):
-    data = sock.recv(10240)
-    if not data:
-        return
+    while True:
+        data = sock.recv(10240)
+        if not data:
+            sock.close()
+            return
 
-    req = str(data, encoding='utf-8')
-    res = ''
-    for word in req:
-        uni = str(ord(word))
-        stroke_pnts, rect_size = uni2pnts(uni, font)
-        if stroke_pnts is None:
-            continue
-        for stroke_pnt in stroke_pnts:
-            stroke = pnts2skeleton(stroke_pnt, rect_size, True)
+        req = str(data, encoding='utf-8')
+        all_strokes = [[], []]
+        rect_size = None
+        for word in req:
+            uni = str(ord(word))
+            print(word)
+            stroke_pnts, rect_size = uni2pnts(uni, font)
+            print(rect_size)
+            if stroke_pnts is None:
+                continue
+            for stroke_pnt in stroke_pnts:
+                stroke = pnts2skeleton(stroke_pnt, rect_size, True)
+                # for i in range(len(stroke[0])):
+                all_strokes[0] += stroke[0]
+                all_strokes[1] += stroke[1]
+        # viz result
+        # viz_pnts(rect_size, all_strokes)
 
-            t_res = str(stroke)
-            res += t_res
-    print(res)
-    sock.send(bytes(res, encoding='utf-8'))
-    sock.close()
-    return
+        res = str(all_strokes)
+        print(len(res))
+        sock.send(bytes(res, encoding='utf-8'))
+        # sock.close()
 
 
 def main(font_file, cofig_file, font_cd='utf-8', cfg_cd='utf-8') -> int:
