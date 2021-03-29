@@ -1,6 +1,8 @@
 import socket
 import json
 import threading
+import cv2
+import numpy as np
 
 
 def readjson(file_path, cd):
@@ -9,3 +11,21 @@ def readjson(file_path, cd):
     t_file.close()
     return t_dict
 
+def viz_pnts(size, pnts, path=None):
+    img = np.zeros(size, np.uint8)
+
+    if path is None:
+        for i in range(len(pnts[0])):
+            img[pnts[1][i], pnts[0][i]] = 255
+    else:
+        for i in path:
+            img[pnts[1][i], pnts[0][i]] = 255
+            timg = cv2.transpose(img)
+            timg = cv2.flip(timg, 0)
+            cv2.imshow("ya", timg)
+            cv2.waitKey(1)
+    img = cv2.transpose(img)
+    img = cv2.flip(img, 0)
+    cv2.imshow("ya", img)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
