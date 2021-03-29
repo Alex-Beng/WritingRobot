@@ -1,9 +1,9 @@
 import socket
 import json
 import threading
-from util import readjson
-from skeleton import uni2pnts, pnts2skeleton, viz_pnts
-
+from util import readjson, viz_pnts
+from skeleton import uni2pnts, pnts2skeleton
+from stroke_path import get_max_continue
 
 def stroke_server(sock: socket.socket, font: dict):
     while True:
@@ -24,6 +24,15 @@ def stroke_server(sock: socket.socket, font: dict):
                 continue
             for stroke_pnt in stroke_pnts:
                 stroke = pnts2skeleton(stroke_pnt, rect_size, True)
+
+                min_idx = sorted(range(len(stroke[0])), key= lambda k: stroke[1][k]-stroke[0][k])
+                t_stroke = [[stroke[0][i] for i in min_idx], [stroke[1][i] for i in min_idx]]
+                stroke = t_stroke
+
+                path = get_max_continue(stroke)
+                t_stroke = [[stroke[0][i] for i in path], [stroke[1][i] for i in path]]
+                stroke = t_stroke
+                
                 # for i in range(len(stroke[0])):
                 all_strokes[0] += stroke[0]
                 all_strokes[1] += stroke[1]
