@@ -1,6 +1,8 @@
 # Writing Robot 
 
-Based on kuka lbr iiwa platform, make Chinese TTF font write-able.
+Make Chinese TTF font write-able, with using simu/real robot implement.
+
+coordinate system document is available in [here](doc/coordinates.md)
 
 
 
