@@ -16,7 +16,7 @@ def uni2pnts(uni :str, font :dict):
                             control points list correspond to the contours one-to-one.
                             control point is the (x, y) form.
                             return None if TTF doesn't have the word
-        rect size (tuple): tuple of two element, (y space, x space)
+        rect size (tuple): tuple of two element, (x space, y space)
                            return None if TTF doesn't have the word
     '''
     if not uni in font['cmap']:
@@ -52,7 +52,7 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
 
     Args:
         ploy_pnts (list): control points' list. control point is the (x, y) form
-        size (tuple): tuple of two element, (y range, x range)
+        size (tuple): tuple of two element, (x range, y range)
     
     Returns:
         skeleton points (list): skeleton points' list. coordinate keep the same with input.
@@ -63,4 +63,4 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
     cv2.fillPoly(img, [ploy_pnts], (1))
     skeleton = skeletonize(img, method='lee')
     skeleton = skeleton.astype(np.uint8)
-    return [list(i) for i in np.nonzero(skeleton)]
+    return [list(i)[::-1] for i in np.nonzero(skeleton)]
