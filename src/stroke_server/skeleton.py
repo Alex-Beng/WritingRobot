@@ -63,4 +63,4 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
     cv2.fillPoly(img, [ploy_pnts], (1))
     skeleton = skeletonize(img, method='lee')
     skeleton = skeleton.astype(np.uint8)
-    return [list(i)[::-1] for i in np.nonzero(skeleton)]
+    return [list(i) for i in np.nonzero(skeleton)][::-1]
