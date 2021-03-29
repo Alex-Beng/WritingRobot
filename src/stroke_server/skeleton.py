@@ -3,11 +3,22 @@ import numpy as np
 from skimage.morphology import skeletonize
 
 
-# unicode to path points
-# input: sigle unicode 
-# output: poly points(rebase if needed), and the glyf-rect
-# reture None if not have
 def uni2pnts(uni :str, font :dict):
+    '''
+    This function gets all contours control points of a unicode word.
+
+    Args:
+        uni (string): the input str of sigle unicode
+        font (dict): the TTF font json-form object
+    
+    Returns:
+        control pnts (list): list where all element are list. element containing 
+                            control points list correspond to the contours one-to-one.
+                            control point is the (x, y) form.
+                            return None if TTF doesn't have the word
+        rect size (tuple): tuple of two element, (y space, x space)
+                           return None if TTF doesn't have the word
+    '''
     if not uni in font['cmap']:
         return None, None
     if not font['cmap'][uni] in font['glyf'] or \
@@ -33,14 +44,19 @@ def uni2pnts(uni :str, font :dict):
                 t_y -= y_min
             res_pnts.append([t_x, t_y])
         all_stroke_pnts.append(res_pnts)
-    return all_stroke_pnts, (y_max-y_min, x_max-x_min)
+    return all_stroke_pnts, (x_max-x_min, y_max-y_min)
 
-     
-# poly points(contours) to its skeleton
-# coor keep the same
-# assume the pnt have become 0-base
-# size: [0] x, [1] y.
 def pnts2skeleton(ploy_pnts, size, debug=False):
+    '''
+    This function gets the font skeleton point of its control points using lee's skeletonize method.
+
+    Args:
+        ploy_pnts (list): control points' list. control point is the (x, y) form
+        size (tuple): tuple of two element, (y range, x range)
+    
+    Returns:
+        skeleton points (list): skeleton points' list. coordinate keep the same with input.
+    '''
     ploy_pnts = np.array(ploy_pnts)
     img = np.zeros(size, np.uint8)
 
@@ -48,7 +64,3 @@ def pnts2skeleton(ploy_pnts, size, debug=False):
     skeleton = skeletonize(img, method='lee')
     skeleton = skeleton.astype(np.uint8)
     return [list(i) for i in np.nonzero(skeleton)]
-    
-
-if __name__ == "__main__":
-    pass
