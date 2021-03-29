@@ -75,7 +75,7 @@ def get_max_continue(pnts, head_part_cont=False, start_idx=0, bit_map=None):
     #             break
 
     while True:
-        print("in",res_path)
+        # print("in",res_path)
         curr_pnt = (pnts[0][curr_pnt_idx], 
                     pnts[1][curr_pnt_idx])
 
@@ -100,7 +100,7 @@ def get_max_continue(pnts, head_part_cont=False, start_idx=0, bit_map=None):
             longest_branch_idx = max(range(len(t_neighbors)), key=lambda k: len(branch_paths[k]))
             res_path += branch_paths[longest_branch_idx]
             break
-    print(res_path)
+    # print(res_path)
     return res_path
 
 # simple test
