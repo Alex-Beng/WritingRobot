@@ -5,12 +5,16 @@ This doc is for coordinates system refer to this project
 ![ttf coor](./images/ttf_coor.png)
 
 ## after uni2pnts
-```math
+
+<img src="https://render.githubusercontent.com/render/math?math=
 \begin{cases}
-x = x' + \delta x \\
-y = y' + \delta y 
+x = x'%2B \delta x \\
+y = y'%2B \delta y 
 \end{cases}
-```
+">
+
+
+
 
 ![0base coor](images/0base_coor.png)
 
@@ -23,16 +27,16 @@ coor sys keep the same
 ## stroke analysis
 
 green line meanning 
-```math
-    y = x + m \\
-    \rightarrow m = y-x
-```
+<img src="https://render.githubusercontent.com/render/math?math=
+y = x %2B m \\
+\rightarrow m = y - m 
+">
+
 
 in Chinese word, the stroke always begin at
-
-```math
-    argmax(m), y \in Y, x \in X.
-```
+<img src="https://render.githubusercontent.com/render/math?math=
+argmax(m), y \in Y, x \in X.
+">
 
 
 ![stroke analysis](images/stroke%20analysis.png)
