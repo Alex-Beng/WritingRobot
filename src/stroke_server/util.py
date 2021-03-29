@@ -3,6 +3,7 @@ import json
 import threading
 import cv2
 import numpy as np
+import copy
 
 
 def readjson(file_path, cd):
@@ -16,10 +17,10 @@ def viz_pnts(size, pnts, path=None):
 
     if path is None:
         for i in range(len(pnts[0])):
-            img[pnts[1][i], pnts[0][i]] = 255
+            img[pnts[0][i], pnts[1][i]] = 255
     else:
         for i in path:
-            img[pnts[1][i], pnts[0][i]] = 255
+            img[pnts[0][i], pnts[1][i]] = 255
             timg = cv2.transpose(img)
             timg = cv2.flip(timg, 0)
             cv2.imshow("ya", timg)

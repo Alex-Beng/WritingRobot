@@ -1,3 +1,11 @@
+class StrokePath:
+    def __init__(self, pnts):
+        
+        self.points = pnts
+        self.begin
+        
+
+
 def get_max_continue(pnts, head_part_cont=False, start_idx=0, bit_map=None):
     '''
     This function get the longest continue path from pnts[0].

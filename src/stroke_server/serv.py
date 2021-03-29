@@ -25,7 +25,7 @@ def stroke_server(sock: socket.socket, font: dict):
             for stroke_pnt in stroke_pnts:
                 stroke = pnts2skeleton(stroke_pnt, rect_size, True)
 
-                min_idx = sorted(range(len(stroke[0])), key= lambda k: stroke[1][k]-stroke[0][k])
+                min_idx = sorted(range(len(stroke[0])), key= lambda k: stroke[0][k]-stroke[1][k])
                 t_stroke = [[stroke[0][i] for i in min_idx], [stroke[1][i] for i in min_idx]]
                 stroke = t_stroke
 
