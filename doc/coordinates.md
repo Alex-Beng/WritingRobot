@@ -38,3 +38,20 @@ coor sys keep the same
 ![0base coor](images/0base_coor.png)
 
 
+# coor system in library
+
+## opencv
+
+in cpp-opencv, src.at(i,j) is using (i,j) as (row,column) but Point(x,y) is using (x,y) as (column,row)
+
+while in python-opencv, src's type is numpy.ndarray, which means that src[i, j] is in numpy's coor sys.
+
+![0base coor](images/opencv_coor1.png)
+
+## numpy
+
+in numpy, src[i,j] is using (i,j) as (row,column).
+
+
+![0base coor](images/opencv_coor2.png)
+
