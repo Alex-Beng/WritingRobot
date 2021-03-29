@@ -22,7 +22,7 @@ coor sys keep the same
 ## stroke analysis
 
 green line meanning 
-<img src="https://render.githubusercontent.com/render/math?math=y = x %2B m \\\rightarrowm = y - m ">
+<img src="https://render.githubusercontent.com/render/math?math=y = x %2B m \\ \rightarrow m = y - m ">
 
 
 in Chinese word, the stroke always begin at
