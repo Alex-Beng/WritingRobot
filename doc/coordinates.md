@@ -26,7 +26,7 @@ green line meanning
 
 
 in Chinese word, the stroke always begin at
-<img src="https://render.githubusercontent.com/render/math?math=argmax(m), y \in Y, x \inX.">
+<img src="https://render.githubusercontent.com/render/math?math=argmax(m), y \in Y, x \in X.">
 
 
 ![stroke analysis](images/stroke%20analysis.png)
