@@ -10,6 +10,7 @@ class StrokePath:
 
         Args:
             pnts ([[], []]): the xs and ys of points
+            rect_size (tuple): the viz rect size
         ''' 
         self.points = pnts
 
