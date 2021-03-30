@@ -30,16 +30,9 @@ def stroke_server(sock: socket.socket, font: dict):
                 stroke_ske_pnts = pnts2skeleton(stroke_control_pnt, rect_size, True)
 
                 stroke_ske_path = StrokePath(stroke_ske_pnts, rect_size)
-                
-                viz_pnts(rect_size,
-                         stroke_ske_path.points, 
-                         stroke_ske_path.path, False, img)
-                
+                                
                 all_strokes[0] += stroke_ske_path.points[0]
                 all_strokes[1] += stroke_ske_path.points[1]
-        # viz result
-        # viz_pnts(rect_size, all_strokes)
-
         res = str(all_strokes)
         print(len(res))
         sock.send(bytes(res, encoding='utf-8'))
