@@ -1,8 +1,46 @@
+from util import viz_pnts
+
 class StrokePath:
-    def __init__(self, pnts):
-        
+    '''
+    This class implement the Chinese stroke path
+    '''
+    def __init__(self, pnts, rect_size=None):
+        '''
+        Init fucntion
+
+        Args:
+            pnts ([[], []]): the xs and ys of points
+        ''' 
         self.points = pnts
-        self.begin
+
+        x_minus_y_max_idx = max(range(len(pnts[0])), key= lambda k: pnts[0][k]-pnts[1][k])
+
+        self.begin_point_idx = x_minus_y_max_idx
+        self.begin_point = (pnts[0][x_minus_y_max_idx], pnts[1][x_minus_y_max_idx])
+        self.path = get_max_continue(self.points, False, self.begin_point_idx)
+        self.end_point_idx = self.path[-1]
+        self.end_point = (pnts[0][self.end_point_idx], pnts[1][self.end_point_idx])
+
+        if rect_size and isinstance(rect_size[0], int) and isinstance(rect_size[1], int):
+            self.rect_size = rect_size
+        else:
+            max_x = max(pnts[0])
+            max_y = max(pnts[1])
+            self.rect_size = (max_x+1, max_y+1)
+    def viz_path(self, img=None, blocking=False):
+        viz_pnts(self.rect_size, self.points, self.path, blocking)
+
+    # get&set function part
+    def get_points(self):
+        return self.points
+    def get_normal_path(self):
+        return self.path
+    def get_reverse_path(self):
+        return self.path[::-1]
+    def get_begin_pnt(self):
+        return self.begin_point, self.begin_point_idx
+    def get_end_pnt(self):
+        return self.end_point, self.end_point_idx
         
 
 
