@@ -1,9 +1,12 @@
 import socket
 import json
 import threading
+import cv2
+import numpy as np
 from util import readjson, viz_pnts
 from skeleton import uni2pnts, pnts2skeleton
-from stroke_path import get_max_continue
+from stroke_path import get_max_continue, StrokePath
+
 
 def stroke_server(sock: socket.socket, font: dict):
     while True:
@@ -18,24 +21,22 @@ def stroke_server(sock: socket.socket, font: dict):
         for word in req:
             uni = str(ord(word))
             print(word)
-            stroke_pnts, rect_size = uni2pnts(uni, font)
-            print(rect_size)
-            if stroke_pnts is None:
+            stroke_control_pnts, rect_size = uni2pnts(uni, font)
+            if stroke_control_pnts is None:
                 continue
-            for stroke_pnt in stroke_pnts:
-                stroke = pnts2skeleton(stroke_pnt, rect_size, True)
+            print(rect_size)
+            img = np.zeros(rect_size, np.uint8)
+            for stroke_control_pnt in stroke_control_pnts:
+                stroke_ske_pnts = pnts2skeleton(stroke_control_pnt, rect_size, True)
 
-                min_idx = sorted(range(len(stroke[0])), key= lambda k: stroke[0][k]-stroke[1][k])
-                t_stroke = [[stroke[0][i] for i in min_idx], [stroke[1][i] for i in min_idx]]
-                stroke = t_stroke
-
-                path = get_max_continue(stroke)
-                t_stroke = [[stroke[0][i] for i in path], [stroke[1][i] for i in path]]
-                stroke = t_stroke
+                stroke_ske_path = StrokePath(stroke_ske_pnts, rect_size)
                 
-                # for i in range(len(stroke[0])):
-                all_strokes[0] += stroke[0]
-                all_strokes[1] += stroke[1]
+                viz_pnts(rect_size,
+                         stroke_ske_path.points, 
+                         stroke_ske_path.path, False, img)
+                
+                all_strokes[0] += stroke_ske_path.points[0]
+                all_strokes[1] += stroke_ske_path.points[1]
         # viz result
         # viz_pnts(rect_size, all_strokes)
 
