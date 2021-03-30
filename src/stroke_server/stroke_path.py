@@ -1,5 +1,3 @@
-from util import viz_pnts
-
 class StrokePath:
     '''
     This class implement the Chinese stroke path
@@ -30,8 +28,6 @@ class StrokePath:
             max_x = max(pnts[0])
             max_y = max(pnts[1])
             self.rect_size = (max_x+1, max_y+1)
-    def viz_path(self, img=None, blocking=False):
-        viz_pnts(self.rect_size, self.points, self.path, blocking)
 
     # get&set function part
     def get_points(self):
