@@ -39,7 +39,7 @@ def viz_pnts(size, pnts, path=None, blocking=True, img=None):
             img[pnts[0][i], pnts[1][i]] = 255
             timg = rot90(img)
             cv2.imshow("viz points", timg)
-            cv2.waitKey(20)
+            cv2.waitKey(1)
     
     timg = rot90(img)
     cv2.imshow("viz points", timg)
