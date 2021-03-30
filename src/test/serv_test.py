@@ -8,35 +8,6 @@ sys.path.append("../")
 from stroke_server.util import readjson, viz_pnts
 from tsp_solver.greedy import solve_tsp
 
-def distance(x1, y1, x2, y2):
-    '''
-    This fucntion calculates the  Euclidian distance between 2 points
-
-    Args:
-        x1 (float): X value of the first point
-        y1 (float): Y value of the first point
-        x2 (float): X value of the second point
-        y2 (float): Y value of the secons point
-
-    Returns:
-        dist (float): Euclidian distance between point 1 and 2
-    '''
-    dist = math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
-    return dist
-
-
-def getajmat(points):
-    pnt_nums = len(points[0])
-    r  = [[0 for x in range(pnt_nums)] for y in range(pnt_nums)]
-
-    for p1 in range(pnt_nums):
-        for p2 in range(pnt_nums):
-            x1, y1= points[0][p1], points[1][p1]
-            x2, y2= points[1][p2], points[1][p2]
-            r[p1][p2]=distance(x1,y1,x2,y2)
-
-    return r
-
 
 def sendonce(cofig_file, cfg_cd='utf-8'):
     config = readjson(cofig_file, cfg_cd)
