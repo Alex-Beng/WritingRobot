@@ -14,13 +14,15 @@ class StrokePath:
         ''' 
         self.points = pnts
 
-        x_minus_y_max_idx = max(range(len(pnts[0])), key= lambda k: pnts[0][k]-pnts[1][k])
+        x_minus_y_max_idx = max(range(len(pnts[0])), key= lambda k: pnts[1][k]-pnts[0][k])
 
         self.begin_point_idx = x_minus_y_max_idx
         self.begin_point = (pnts[0][x_minus_y_max_idx], pnts[1][x_minus_y_max_idx])
         self.path = get_max_continue(self.points, False, self.begin_point_idx)
         self.end_point_idx = self.path[-1]
         self.end_point = (pnts[0][self.end_point_idx], pnts[1][self.end_point_idx])
+
+        self.points = [[pnts[0][i] for i in self.path], [pnts[1][i] for i in self.path]]
 
         if rect_size and isinstance(rect_size[0], int) and isinstance(rect_size[1], int):
             self.rect_size = rect_size
