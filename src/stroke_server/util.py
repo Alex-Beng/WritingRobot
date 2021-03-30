@@ -27,8 +27,8 @@ def viz_pnts(size, pnts, path=None, blocking=True, img=None):
         timg = cv2.transpose(img)
         timg = cv2.flip(timg, 0)
         return timg
-    
-    if not img:
+
+    if img is None:
         img = np.zeros(size, np.uint8)
 
     if path is None:
