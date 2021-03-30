@@ -12,7 +12,16 @@ def readjson(file_path, cd):
     t_file.close()
     return t_dict
 
-def viz_pnts(size, pnts, path=None):
+def viz_pnts(size, pnts, path=None, blocking=True):
+    '''
+    This function visualize the 0-base TTF coooridate system's point in opencv
+
+    Args:
+        size (tuple): the viz rect size
+        pnts (list): two elements' list, xs' list and ys' list
+        paht (list): pnts idxs' list, the path of points
+        blocking (bool): whether block when imshowing the final result
+    '''
     img = np.zeros(size, np.uint8)
 
     if path is None:
@@ -23,10 +32,13 @@ def viz_pnts(size, pnts, path=None):
             img[pnts[0][i], pnts[1][i]] = 255
             timg = cv2.transpose(img)
             timg = cv2.flip(timg, 0)
-            cv2.imshow("ya", timg)
-            cv2.waitKey(1)
+            cv2.imshow("viz points", timg)
+            cv2.waitKey(20)
     img = cv2.transpose(img)
     img = cv2.flip(img, 0)
-    cv2.imshow("ya", img)
-    cv2.waitKey()
+    cv2.imshow("viz points", img)
+    if blocking:
+        cv2.waitKey()
+    else:
+        cv2.waitKey(5000)
     cv2.destroyAllWindows()
