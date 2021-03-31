@@ -74,6 +74,7 @@ def paths_planning(stroke_paths, b_point, e_point, res=[float('inf'), []], curr_
     which is acutally a tsp-like problem (or AKA NP-hard problem)
 
     RETURN RESULT BY PARAMETERS
+    THE curr_res SHOULD BE RESET FOR EVERY CALL
 
     Args:
         stroke_paths (list): list of StrokePath objects
