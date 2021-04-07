@@ -12,31 +12,52 @@ class TspSolver:
         self.res = [float('inf'), []]
 
         self.memo = dict()
+        '''
+            DP[S, i] = [j, C]
+            S: visited node
+            i: node last visited
+            j: node to visit
+            C: curr cost
 
-    
-    def dfs(self, s_unsort: list, out: int)->list:
-        s_sort = sorted(s_unsort)
+            [S, i]'s format: (tuple(S), i)
+            [j, C]'s format: list
+        '''
+    def dp(self):
+        all_pnt_set = set(range(self.n))
 
-        curr_status_key = f'{str(s_sort)};{out}'
-        if curr_status_key in self.memo:
-            return self.memo[curr_status_key]
-        
-        if out == self.e_idx:
-            return self.distance[out][self.e_idx]
-        
-        s_unsort.append(out)
-        result = float('inf')
-        for i in range(self.n):
-            if i in s_unsort:
-                continue
-            if i==self.e_idx and self.n-len(s_unsort)>1:
-                continue
-            result = min([result, 
-                          self.dfs(s_unsort, i)+self.distance[out][i]])
-        del s_unsort[-1]
+        # memo keys: tuple(unsorted_points_in_path, last_point_in_path)
+        # memo values: list(next_to_visit, curr_cost)
+        self.memo = { (tuple([self.b_idx]), self.b_idx): [None, 0] }
+        qrq = [ (tuple([self.b_idx]), self.b_idx) ]
 
-        self.memo[curr_status_key] = result
-        return result
+        while qrq:
+            visited, last_vis = qrq.pop(0)
+            _, curr_cost = self.memo[ (visited, last_vis) ]
+            vis_able_path = all_pnt_set.difference(set(visited))
+
+            vis_able_path = vis_able_path.difference(set([self.e_idx]))
+            if not vis_able_path: # 只能去终点啦
+                new_visited = tuple( (list(visited) + [self.e_idx]) )
+                new_cost = curr_cost + self.distance[last_vis][self.e_idx]
+
+                self.memo[(new_visited, self.e_idx)] = (last_vis, new_cost)
+            
+            for to_path in vis_able_path:
+                new_visited = tuple( list(visited) + [to_path] )
+                new_cost = curr_cost + self.distance[last_vis][to_path]
+
+                if (new_visited, to_path) not in self.memo:
+                    self.memo[(new_visited, to_path)] = (last_vis, new_cost)
+                    qrq += [(new_visited, to_path)]
+                else:
+                    if new_cost < self.memo[(new_visited, to_path)][1]:
+                        self.memo[(new_visited, to_path)] = (last_vis, new_cost)
+        all_points = set(range(n))
+        full_path_memo = dict( (k, v) for k, v in self.memo.items()
+                                if set(k[0]) == all_points )
+        path_key = min(full_path_memo.keys(), key=lambda k: full_path_memo[k][1])
+
+        return path_key[0], full_path_memo[path_key][1]
 
 if __name__ == '__main__':
     from stroke_path import StrokePath, get_ajmat
@@ -54,15 +75,15 @@ if __name__ == '__main__':
     tt = StrokePath(pnts)
 
 
-    ajmat = get_ajmat([t, tt], (0,0), (255, 255))
+    ajmat = get_ajmat([t, tt, t, t, t, t, t, t, t], (0,0), (255, 255))
     print(ajmat)
 
     n = len(ajmat[0])
 
     tsp_solver = TspSolver(ajmat, 0, n-1)
-    a = tsp_solver.dfs([], 0)
+    a = tsp_solver.dp()
     print(a)
-    print(tsp_solver.memo)
+    # print(tsp_solver.memo)
 
 
 
