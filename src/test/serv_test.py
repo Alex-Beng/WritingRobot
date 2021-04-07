@@ -22,10 +22,10 @@ def sendonce(cofig_file, cfg_cd='utf-8'):
             t_str = str(recvs, encoding='utf-8')
             t_list = json.loads(t_str)
 
-            min_idx = min(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
-            min_path = sorted(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
-            print(min_idx)
-            path = None
+            # min_idx = min(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
+            # min_path = sorted(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
+            # print(min_idx)
+            # path = None
             path = range(len(t_list[0]))
             # path = min_path
 
