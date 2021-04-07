@@ -8,9 +8,6 @@ class TspSolver:
 
         self.n = len(distance)
         
-        # final result
-        self.res = [float('inf'), []]
-
         self.memo = dict()
         '''
             DP[S, i] = [j, C]
