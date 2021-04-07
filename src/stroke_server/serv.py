@@ -32,10 +32,9 @@ def stroke_server(sock: socket.socket, font: dict):
 
                 stroke_ske_path = StrokePath(stroke_ske_pnts, rect_size)
                 sk_path_objs.append(stroke_ske_path)
-            path_plan_res = [float('inf'), []]
-            paths_planning(sk_path_objs, (0, 0), (255, 255), path_plan_res, [0, []])
+            path_plan_res = paths_planning(sk_path_objs, (0, 0), (255, 255), 13)
             print(len(sk_path_objs), path_plan_res)
-            for i in path_plan_res[1]:
+            for i in path_plan_res:
                 all_strokes[0] += sk_path_objs[i].points[0]
                 all_strokes[1] += sk_path_objs[i].points[1]
         res = str(all_strokes)

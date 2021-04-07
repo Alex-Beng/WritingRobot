@@ -1,6 +1,8 @@
 import math
 from copy import deepcopy
 
+from tsp import TspSolver
+
 class StrokePath:
     '''
     This class implement the Chinese stroke path
@@ -199,6 +201,44 @@ def get_max_continue(pnts, head_part_cont=False, start_idx=0, bit_map=None):
             break
     # print(res_path)
     return res_path
+
+def paths_planning(stroke_paths, b_pnt, e_pnt, dp_thre=13):
+    '''
+        This function combine dp and heuristic alg to solve the stroke paths planning,
+        which is acutally a tsp-like problem (or AKA NP-hard problem)     
+    '''
+    raw_stroke_paths = deepcopy(stroke_paths)
+    n = len(raw_stroke_paths)
+
+    path_valid = [1 for i in range(n)]
+    res_path = []
+    if n > dp_thre:
+        t_b_pnt = b_pnt
+        for i in range(n): # 路径数量大于预设使用 dp 阈值，使用“启tan发xin式”算法
+            min_idx = min(range(len(stroke_paths)), 
+                            key=lambda k: 
+                            float('inf') if not path_valid[k] 
+                            else manhat_distance(t_b_pnt, stroke_paths[k].get_begin_pnt()[0]))
+            path_valid[min_idx] = 0
+            res_path.append(min_idx)
+
+            t_b_pnt = stroke_paths[min_idx].get_end_pnt()[0]
+        return res_path
+
+
+    ajmat = get_ajmat(stroke_paths, (0,0), (255, 255))
+    tsp_solver = TspSolver(ajmat, 0, n+1) # 增加了起点终点
+
+    tsp_res, _ = tsp_solver.dp()
+    print(tsp_res)
+    tsp_res = tsp_res[1:-1]
+    tsp_res = [i-1 for i in tsp_res]
+    print(tsp_res)
+
+    res_path += tsp_res
+
+    return res_path
+
 
 # simple test
 if __name__ == "__main__":
