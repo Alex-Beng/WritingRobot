@@ -53,7 +53,7 @@ class TspSolver:
         return self.retrace_path()
 
     def retrace_path(self):
-        points_to_retrace = set(range(n)) # init with all points
+        points_to_retrace = set(range(self.n)) # init with all points
 
         full_path_memo = dict( (k, v) for k, v in self.memo.items()
                                 if set(k[0]) == points_to_retrace )
