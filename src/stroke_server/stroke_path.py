@@ -68,60 +68,32 @@ def manhat_distance(pnt1, pnt2):
     dist = abs(pnt1[0] - pnt2[0]) + abs(pnt1[1] - pnt2[1])
     return dist
 
-def paths_planning(stroke_paths, b_point, e_point, res=[float('inf'), []], curr_res=[0, []]):
-    '''
-    This function combine dfs and heuristic alg to solve the stroke paths planning,
-    which is acutally a tsp-like problem (or AKA NP-hard problem)
-
-    RETURN RESULT BY PARAMETERS
-    THE curr_res SHOULD BE RESET FOR EVERY CALL
-
-    Args:
-        stroke_paths (list): list of StrokePath objects
-        b_point (tuple): tuple of x and y, (x, y)
-        e_point (tuple): tuple of x and y, (x, y)
-        curr_res (list): [len, [path]] len is the len of path, 
-                    path is the index of stroke paths that have the shortest move distance
-        res (list): [len, [path]] len is the len of path, 
-                    path is the index of stroke paths that have the shortest move distance
-        
-    '''
+def get_ajmat(stroke_paths, b_pnt, e_pnt):
     n = len(stroke_paths)
-    if len(curr_res[1]) == n: # end node
-        if curr_res[0] < res[0]:
-            res[0] = curr_res[0]
-            res[1] = deepcopy(curr_res[1])
-            return
-
-    # simple cut
-    if curr_res[0] > res[0]:
-        return
-    
-    path_valid = [0 if i in curr_res[1] else 1 for i in range(n)]
-    curr_b_pnt = stroke_paths[curr_res[1][-1]].get_end_pnt()[0] if curr_res[1] else b_point
-
-    while n-len(curr_res[1]) > 6: # if problem size > 6, use heuristic(greedy) alg
-                 # 写的太烂了，O(n!)复杂度应该在n=12左右才会做不到实时
-                 # 测试一下，6就不行了
-        curr_b_pnt = b_point
-
-        min_idx = min(range(len(stroke_paths)), 
-                        key=lambda k: 
-                            float('inf') if not path_valid[k] else manhat_distance(curr_b_pnt, 
-                                                    stroke_paths[k].get_begin_pnt()[0]))
-        curr_res[0] += manhat_distance(curr_b_pnt, stroke_paths[min_idx].get_begin_pnt()[0])
-        curr_res[1].append(min_idx)
-        path_valid[min_idx] = 0
+    n += 2
+    distance = [[0]*n for i in range(n) ]
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            t_b = None
+            t_e = None
+            if i == 0:
+                t_b = b_pnt
+            elif i == n-1:
+                t_b = e_pnt
+            else:
+                t_b = stroke_paths[i-1].get_end_pnt()[0]
             
-    for idx, sk_path in enumerate(stroke_paths):
-        if path_valid[idx]:
-            # t_d = euc_distance(curr_b_pnt, stroke_paths[idx].get_begin_pnt()[0])
-            t_d = manhat_distance(curr_b_pnt, stroke_paths[idx].get_begin_pnt()[0])
-            curr_res[0] += t_d
-            curr_res[1].append(idx)
-            paths_planning(stroke_paths, b_point, e_point, res, curr_res)
-            curr_res[0] -= t_d
-            del curr_res[1][-1]
+            if j == 0:
+                t_e = b_pnt
+            elif j == n-1:
+                t_e = e_pnt
+            else:
+                t_e = stroke_paths[j-1].get_begin_pnt()[0]
+            distance[i][j] = manhat_distance(t_b, t_e)
+    return distance
+                
 
 def get_max_continue(pnts, head_part_cont=False, start_idx=0, bit_map=None):
     '''
@@ -242,11 +214,13 @@ if __name__ == "__main__":
         [0, 1, 2, 3, 4, 2, 1, ]
     ]
     # print(get_max_continue(pnts, True, 0, None))
-
+    
     t = StrokePath(pnts)
-    res = [float('inf'), []]
-    paths_planning([t, t, t, t, t, t, t, t, t, t], (0,0), (255, 255), res)
-    print(res)
+    ajmat = get_ajmat([t, t, t, t, t, t, t, t, t, ], (0,0), (255, 255))
+
+    # res = [float('inf'), []]
+    paths_planning_dp(ajmat, 0, len(ajmat)-1)
+    # print(res)
     
                     
                 
