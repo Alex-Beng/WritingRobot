@@ -21,12 +21,21 @@ def sendonce(cofig_file, cfg_cd='utf-8'):
             recvs = s.recv(10240000)
             t_str = str(recvs, encoding='utf-8')
             t_list = json.loads(t_str)
+            
+            def scale(n):
+                return n/255.0*0.4
+            print("[", end='')
+            for i in range(len(t_list[0])):
+                print(f"0 {scale(t_list[0][i])} {scale(t_list[1][i])} ;")
+            print("]")
+            # print(t_list)
 
             # min_idx = min(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
             # min_path = sorted(range(len(t_list[0])), key= lambda k: t_list[0][k]**2+t_list[1][k]**2)
             # print(min_idx)
             # path = None
             path = range(len(t_list[0]))
+            print(len(t_list[0]))
             # path = min_path
 
             # viz_pnts((255, 255), t_list)
