@@ -7,20 +7,22 @@ ikWeights = [1 1 1 1 1 1];
 ikInitGuess = gen3.homeConfiguration;
 
 % plot all waypoints
-hTraj = plot3(waypoints(1,:),waypoints(2,:),waypoints(3,:),'ro','LineWidth',2);
+show(gen3,jointAnglesHome','Frames','off','PreservePlot',false);
+xlim([-1 1]), ylim([-1 1]), zlim([0 1.2])
+hold on
+hTraj = plot3(waypoints(1,1),waypoints(2,1),waypoints(3,1),'b.-');
+% plot3(waypoints(1,:),waypoints(2,:),waypoints(3,:),'ro','LineWidth',1);
 
-trajType = 'trap';
+trajType = 'quintic';
 switch trajType
 case 'trap'
     [q,qd,qdd] = trapveltraj(waypoints,numel(trajTimes));
                         
 case 'cubic'
-    [q,qd,qdd] = cubicpolytraj(waypoints,waypointTimes,trajTimes, ... 
-        );
+    [q,qd,qdd] = cubicpolytraj(waypoints,waypointTimes,trajTimes);
     
 case 'quintic'
-    [q,qd,qdd] = quinticpolytraj(waypoints,waypointTimes,trajTimes, ... 
-        );
+    [q,qd,qdd] = quinticpolytraj(waypoints,waypointTimes,trajTimes);
     
 case 'bspline'
     ctrlpoints = waypoints; % Can adapt this as needed
